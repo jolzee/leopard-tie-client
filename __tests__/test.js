@@ -1,10 +1,8 @@
-import helloWorld from '../src/index';
+// import TIE from '../src/index';
 
-describe(`my first test`, () => {
-
-  it(`must say hello world`, () => {
-    const actual = helloWorld();
-    expect(actual).toBe(`hello world`);
+describe(`leopard tie client`, () => {
+  it(`must say jolzee`, () => {
+    const actual = 'jolzee';
+    expect(actual).toBe(`jolzee`);
   });
-
 });

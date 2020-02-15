@@ -1,7 +1,7 @@
 {
   "name": "leopard-tie-client",
   "version": "0.0.0",
-  "description": "Extended TIE Client that accepts additional heustomaderseaders",
+  "description": "Extended TIE Client that accepts additional custom request headers",
   "main": "dist/cjs/index.js",
   "browser": "dist/umd/leopardTieClient.js",
   "module": "dist/es/index.js",
@@ -14,7 +14,6 @@
     "node": ">=4.0.0"
   },
   "scripts": {
-
     "prepublish": "npm run build",
     "precommit": "npm run lint:test",
     "prepush": "npm run lint:test",
@@ -37,27 +36,35 @@
   "author": "Peter Joles (jolzee@gmail.com)",
   "license": "MIT",
   "repository": "jolzee/leopard-tie-client",
+  "dependencies": {
+    "es6-promise": "^4.2.8",
+    "isomorphic-fetch": "^2.2.1"
+  },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.4",
-    "babel-plugin-add-module-exports": "^1.0.2",
-  "babel-plugin-transform-flow-strip-types": "^6.22.0",
-
     "@babel/preset-env": "^7.8.4",
+    "babel-plugin-add-module-exports": "^1.0.2",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "coveralls": "^3.0.9",
     "cross-env": "^7.0.0",
-    "eslint": "^6.8.0",
-    "eslint-config-devine": "^3.0.1",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-babel": "^5.3.0",
-  "flow-bin": "^0.118.0",
-    "jest": "^25.1.0",
-    "rimraf": "^3.0.2",
-    "release-it": "^12.4.3",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "flow-bin": "^0.118.0",
     "husky": "^4.2.3",
+    "jest": "^25.1.0",
+    "release-it": "^12.4.3",
+    "rimraf": "^3.0.2",
     "rollup": "^1.31.1",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-bundle-size": "^1.0.3",
     "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-filesize": "^6.2.1",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-uglify": "^6.0.4"
   }
