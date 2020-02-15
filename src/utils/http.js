@@ -13,21 +13,21 @@ const generateHeaders = additionalHeaders => {
   return headers;
 };
 
-const errs = {
+const errors = {
   timeout: {
     success: false,
-    code: 0,
-    msg: 'Request Timeout: 20 seconds'
+    status: 2,
+    message: 'Request Timeout: 20 seconds'
   },
-  neterr: {
+  net: {
     success: false,
-    code: 1,
-    msg: 'Network Error'
+    status: 3,
+    message: 'Network Error'
   },
-  bussiness: {
+  business: {
     success: false,
-    code: 2,
-    msg: 'System Error'
+    status: 4,
+    message: 'System Error'
   }
 };
 
@@ -44,31 +44,31 @@ module.exports = {
 
     return new Promise((resolve, reject) => {
       const fail = () => {
-        reject(errs.timeout);
+        reject(errors.timeout);
       };
       let to = setTimeout(fail, config.timeout);
-      return fetch
+      return request
         .then(response => {
           if (to) clearTimeout(to);
           if (response.status >= 400) {
-            let e = errs.bussiness;
-            e.msg = `Received error code ${response.status}`;
+            let e = errors.business;
+            e.message = `Received error code ${response.status}`;
             reject(e);
             return;
           }
-          return response.json().then(json => {
-            if (json instanceof Object && json.output) {
+          response.json().then(json => {
+            if (json instanceof Object && 'status' in json) {
               resolve(json);
             } else {
-              let otherError = errs.bussiness;
-              otherError.msg = json;
-              reject(otherError);
+              let businessError = errors.business;
+              businessError.message = json;
+              reject(businessError);
             }
           });
         })
         .catch(() => {
           if (to) clearTimeout(to);
-          reject(errs.neterr);
+          reject(errors.net);
         });
     });
   }

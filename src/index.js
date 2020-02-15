@@ -28,7 +28,7 @@ const requestBody = body => {
   return Object.assign(parameters, body);
 };
 
-const close = (teneoEngineUrl, sessionId, cb) => {
+function close(teneoEngineUrl, sessionId, cb) {
   const endSessionUrl = appendSessionId(`${formatEngineUrl(teneoEngineUrl)}endsession`, sessionId);
   const headers = sessionId ? { Cookie: `JSESSIONID=${sessionId}` } : {};
 
@@ -36,7 +36,7 @@ const close = (teneoEngineUrl, sessionId, cb) => {
     .post(endSessionUrl, requestBody(), headers)
     .then(response => cb(null, response.body))
     .catch(error => cb(error));
-};
+}
 
 const verifyInputData = inputData => {
   const validDataType = x => ['string', 'number', 'bool', 'object'].includes(typeof x);
@@ -55,7 +55,7 @@ const verifyInputData = inputData => {
   }
 };
 
-const sendInput = (teneoEngineUrl, currentSessionId, inputData, cb) => {
+function sendInput(teneoEngineUrl, currentSessionId, inputData, cb) {
   verifyInputData(inputData);
 
   const headers = getHeaders(currentSessionId, inputData);
@@ -67,15 +67,13 @@ const sendInput = (teneoEngineUrl, currentSessionId, inputData, cb) => {
     .post(url, body, headers)
     .then(response => cb(null, response))
     .catch(error => cb(error));
-};
+}
 
-export default () => {
-  return {
-    close: callbackOrPromise(close),
-    sendInput: callbackOrPromise(sendInput),
-    init: teneoEngineUrl => ({
-      close: callbackOrPromise(close.bind(null, teneoEngineUrl)),
-      sendInput: callbackOrPromise(sendInput.bind(null, teneoEngineUrl))
-    })
-  };
+module.exports = {
+  close: callbackOrPromise(close),
+  sendInput: callbackOrPromise(sendInput),
+  init: teneoEngineUrl => ({
+    close: callbackOrPromise(close.bind(null, teneoEngineUrl)),
+    sendInput: callbackOrPromise(sendInput.bind(null, teneoEngineUrl))
+  })
 };

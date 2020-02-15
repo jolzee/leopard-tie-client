@@ -47,7 +47,7 @@ const TIE = require('leopard-tie-client');
 
 const teneoEngineUrl = 'https://some.teneo/engine-instance';
 const logResponse = response => {
-  console.log(response.output);
+  console.log(response);
   return response;
 };
 
@@ -55,7 +55,8 @@ TIE.sendInput(teneoEngineUrl, null, { text: 'My name is Peter' })
   .then(logResponse)
   .then(({ sessionId }) => TIE.sendInput(teneoEngineUrl, sessionId, { text: 'What is my name?' }))
   .then(logResponse)
-  .then(({ sessionId }) => TIE.close(teneoEngineUrl, sessionId));
+  .then(({ sessionId }) => TIE.close(teneoEngineUrl, sessionId))
+  .catch(err => console.error(err));
 ```
 
 Note that when used as a Node.js module, you need to manually handle the session by passing the session ID to the API functions.
@@ -65,15 +66,16 @@ Note that when used as a Node.js module, you need to manually handle the session
 ```javascript
 const teneoEngineUrl = 'https://some.teneo/engine-instance';
 const logResponse = response => {
-  console.log(response.output);
+  console.log(response);
   return response;
 };
 
 TIE.sendInput(teneoEngineUrl, null, { text: 'My name is Peter' })
   .then(logResponse)
-  .then(() => TIE.sendInput(teneoEngineUrl, null, { text: 'What is my name?' }))
+  .then(({ sessionId }) => TIE.sendInput(teneoEngineUrl, null, { text: 'What is my name?' }))
   .then(logResponse)
-  .then(() => TIE.close(teneoEngineUrl));
+  .then(({ sessionId }) => TIE.close(teneoEngineUrl))
+  .catch(err => console.error(err));
 ```
 
 Note that in the browser the session is maintained via cookies and the API cannot manually override the browser's handling of the session. That means that you never need (nor should) pass the session ID when using the API in the browser.
@@ -153,7 +155,7 @@ Returns a version of the Teneo Interaction Engine API with the Teneo Engine url 
     .then(response =>
       console.log(response);
       return teneoApi.close(response.sessionId);
-    });
+    }).catch(error => console.error(error));
 ```
 
 ##### Signature
