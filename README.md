@@ -8,7 +8,7 @@
 [![Gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square)](https://gitmoji.carloscuesta.me/)
 [![NPM](https://img.shields.io/npm/dt/leopard-tie-client.svg?style=flat-square)](https://www.npmjs.com/package/leopard-tie-client)
 
-> Modified TIE Client that accepts custom headers
+> Extended TIE Client that accepts additional heustomaderseaders
 
 ### Usage
 
@@ -75,4 +75,4 @@ We are open to contributions, see [CONTRIBUTING.md](CONTRIBUTING.md) for more in
 
 ### Misc
 
-This module was created using [generator-module-boilerplate](https://github.com/duivvv/generator-module-boilerplate).
+This module was created using [generator-jolzee-node-module](https://github.com/jolzee/generator-jolzee-node-module).
