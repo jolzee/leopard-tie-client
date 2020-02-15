@@ -12,7 +12,7 @@ const promisify = fn => (...args) =>
     });
   });
 
-module.exports = function callbackOrPromise(fn) {
+export default function callbackOrPromise(fn) {
   return (...args) => {
     if (hasCallback(fn, args)) {
       fn(...args);
@@ -21,4 +21,4 @@ module.exports = function callbackOrPromise(fn) {
 
     return promisify(fn)(...args);
   };
-};
+}

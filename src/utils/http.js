@@ -31,7 +31,7 @@ const errors = {
   }
 };
 
-module.exports = {
+export default {
   post: (url, data, headers = {}) => {
     const config = {
       headers: generateHeaders(headers),

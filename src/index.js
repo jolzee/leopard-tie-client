@@ -1,6 +1,6 @@
-const callbackOrPromise = require('./utils/callback-or-promise');
-const http = require('./utils/http');
-const prune = require('./utils/prune');
+import callbackOrPromise from './utils/callback-or-promise';
+import http from './utils/http';
+import prune from './utils/prune';
 
 const readClientOrigin = () => {
   if (typeof document === 'undefined' || !document.location) return;
@@ -69,7 +69,7 @@ function sendInput(teneoEngineUrl, currentSessionId, inputData, cb) {
     .catch(error => cb(error));
 }
 
-module.exports = {
+export default {
   close: callbackOrPromise(close),
   sendInput: callbackOrPromise(sendInput),
   init: teneoEngineUrl => ({
