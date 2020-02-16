@@ -28,6 +28,7 @@ export default {
   plugins,
   input: `src/index.js`,
   output: {
+    intro: 'var global = typeof self !== undefined ? self : this;',
     file: `dist/umd/${name}${isProd ? `.min` : ``}.js`,
     format: `umd`,
     name: name
