@@ -1,6 +1,7 @@
 import callbackOrPromise from './utils/callback-or-promise';
 import http from './utils/http';
 import prune from './utils/prune';
+import { isNode } from 'browser-or-node';
 
 const readClientOrigin = () => {
   if (typeof document === 'undefined' || !document.location) return;
@@ -9,16 +10,16 @@ const readClientOrigin = () => {
 };
 
 const getHeaders = (currentSessionId, inputData) => {
-  const headers = currentSessionId
-    ? {
-        Cookie: `JSESSIONID=${currentSessionId}`
-      }
-    : {};
+  const headers =
+    currentSessionId && isNode
+      ? {
+          Cookie: `JSESSIONID=${currentSessionId}`
+        }
+      : {};
   return 'headers' in inputData ? Object.assign(inputData.headers, headers) : headers;
 };
 const getParameters = prune(['viewtype', 'userinput', 'text', 'clientOrigin', 'headers']);
 const formatEngineUrl = url => (url.endsWith('/') ? url : `${url}/`);
-const appendSessionId = (url, sessionId) => (sessionId ? `${url};jsessionid=${sessionId}` : url);
 
 const requestBody = body => {
   const clientOrigin = readClientOrigin();
@@ -29,8 +30,8 @@ const requestBody = body => {
 };
 
 function close(teneoEngineUrl, sessionId, cb) {
-  const endSessionUrl = appendSessionId(`${formatEngineUrl(teneoEngineUrl)}endsession`, sessionId);
-  const headers = sessionId ? { Cookie: `JSESSIONID=${sessionId}` } : {};
+  const endSessionUrl = `${formatEngineUrl(teneoEngineUrl)}endsession`;
+  const headers = sessionId && isNode ? { Cookie: `JSESSIONID=${sessionId}` } : {};
 
   return http
     .post(endSessionUrl, requestBody(), headers)
@@ -61,8 +62,7 @@ function sendInput(teneoEngineUrl, currentSessionId, inputData, cb) {
   const headers = getHeaders(currentSessionId, inputData);
   const parameters = getParameters(inputData);
   const body = requestBody(Object.assign({ userinput: inputData.text }, parameters));
-  const url = appendSessionId(formatEngineUrl(teneoEngineUrl), currentSessionId);
-
+  const url = formatEngineUrl(teneoEngineUrl);
   return http
     .post(url, body, headers)
     .then(response => cb(null, response))

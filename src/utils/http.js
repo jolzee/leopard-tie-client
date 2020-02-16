@@ -2,8 +2,7 @@ import superagent from 'superagent';
 
 const generateHeaders = additionalHeaders => {
   return Object.assign(additionalHeaders, {
-    Accept: 'application/json;charset=UTF-8',
-    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+    Accept: 'application/json'
   });
 };
 
@@ -43,18 +42,28 @@ export default {
             let json = res.body;
             if (json instanceof Object && 'status' in json) {
               resolve(json);
+              return;
+            } else if (json === null) {
+              resolve({
+                status: 1,
+                message: 'logout'
+              });
+              return;
             } else {
+              console.log(`JSON is..`, json);
               let businessError = errors.business;
               businessError.message = json;
               reject(businessError);
+              return;
             }
           },
           err => {
             if (err.timeout) {
               reject(errors.timeout);
             } else {
+              console.log(err);
               let e = errors.business;
-              e.message = `Received error code ${res.status}`;
+              e.message = err;
               reject(e);
             }
           }
