@@ -1,14 +1,13 @@
 # leopard-tie-client
 
-![Node](https://img.shields.io/node/v/leopard-tie-client.svg?style=flat-square)
-[![NPM](https://img.shields.io/npm/v/leopard-tie-client.svg?style=flat-square)](https://www.npmjs.com/package/leopard-tie-client)
-[![Travis](https://img.shields.io/travis/jolzee/leopard-tie-client/master.svg?style=flat-square)](https://travis-ci.org/jolzee/leopard-tie-client)
-[![David](https://img.shields.io/david/jolzee/leopard-tie-client.svg?style=flat-square)](https://david-dm.org/jolzee/leopard-tie-client)
-[![Coverage Status](https://img.shields.io/coveralls/jolzee/leopard-tie-client.svg?style=flat-square)](https://coveralls.io/github/jolzee/leopard-tie-client)
-[![Gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square)](https://gitmoji.carloscuesta.me/)
-[![NPM](https://img.shields.io/npm/dt/leopard-tie-client.svg?style=flat-square)](https://www.npmjs.com/package/leopard-tie-client)
+![Node](https://img.shields.io/node/v/leopard-tie-client.svg?style=plastic)
+[![NPM](https://img.shields.io/npm/v/leopard-tie-client.svg?style=plastic)](https://www.npmjs.com/package/leopard-tie-client)
+[![Travis](https://img.shields.io/travis/jolzee/leopard-tie-client/master.svg?style=plastic)](https://travis-ci.org/jolzee/leopard-tie-client)
+[![David](https://img.shields.io/david/jolzee/leopard-tie-client.svg?style=plastic)](https://david-dm.org/jolzee/leopard-tie-client)
+[![Gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=plastic)](https://gitmoji.carloscuesta.me/)
+[![NPM](https://img.shields.io/npm/dt/leopard-tie-client.svg?style=plastic)](https://www.npmjs.com/package/leopard-tie-client)
 
-> Extended TIE Client that accepts additional custom request headers
+> Extended TIE client that accepts additional custom request headers and times out after 20 seconds
 
 ### Usage
 
