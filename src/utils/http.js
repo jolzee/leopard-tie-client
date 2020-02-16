@@ -1,7 +1,6 @@
-require('es6-promise').polyfill();
-require('isomorphic-fetch');
-
-const querystring = require('querystring');
+import 'es6-promise/auto';
+import 'isomorphic-fetch';
+import querystring from 'querystring';
 
 const generateHeaders = additionalHeaders => {
   const headers = new Headers();
