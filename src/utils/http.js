@@ -1,15 +1,10 @@
-import 'es6-promise/auto';
-import 'isomorphic-fetch';
-import querystring from 'querystring';
+import superagent from 'superagent';
 
 const generateHeaders = additionalHeaders => {
-  const headers = new Headers();
-  headers.append('Accept', 'application/json;charset=UTF-8');
-  headers.append('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8');
-  Object.keys(additionalHeaders).forEach(key => {
-    headers.append(key, additionalHeaders[key]);
+  return Object.assign(additionalHeaders, {
+    Accept: 'application/json;charset=UTF-8',
+    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
   });
-  return headers;
 };
 
 const errors = {
@@ -31,31 +26,21 @@ const errors = {
 };
 
 export default {
-  post: (url, data, headers = {}) => {
-    const config = {
-      headers: generateHeaders(headers),
-      method: 'POST',
-      credentials: 'include',
-      timeout: 20000,
-      body: querystring.stringify(data)
-    };
-    const request = fetch(url, config);
-
+  post: (url, params, headers = {}) => {
     return new Promise((resolve, reject) => {
-      const fail = () => {
-        reject(errors.timeout);
-      };
-      let to = setTimeout(fail, config.timeout);
-      return request
-        .then(response => {
-          if (to) clearTimeout(to);
-          if (response.status >= 400) {
-            let e = errors.business;
-            e.message = `Received error code ${response.status}`;
-            reject(e);
-            return;
-          }
-          response.json().then(json => {
+      superagent
+        .post(url)
+        .withCredentials()
+        .type('form')
+        .timeout({
+          response: 7000, // Wait 7 seconds for the server to start sending,
+          deadline: 20000 // but allow 20 seconds for the request to finish.
+        })
+        .set(generateHeaders(headers))
+        .send(params)
+        .then(
+          res => {
+            let json = res.body;
             if (json instanceof Object && 'status' in json) {
               resolve(json);
             } else {
@@ -63,12 +48,17 @@ export default {
               businessError.message = json;
               reject(businessError);
             }
-          });
-        })
-        .catch(() => {
-          if (to) clearTimeout(to);
-          reject(errors.net);
-        });
+          },
+          err => {
+            if (err.timeout) {
+              reject(errors.timeout);
+            } else {
+              let e = errors.business;
+              e.message = `Received error code ${res.status}`;
+              reject(e);
+            }
+          }
+        );
     });
   }
 };

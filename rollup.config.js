@@ -4,17 +4,21 @@ import uglify from 'rollup-plugin-uglify-es';
 import filesize from 'rollup-plugin-filesize';
 import commonjs from 'rollup-plugin-commonjs';
 import json from '@rollup/plugin-json';
-import builtins from 'rollup-plugin-node-builtins';
+// import builtins from 'rollup-plugin-node-builtins';
+// import nodeGlobals from 'rollup-plugin-node-globals';
 
 const name = `leopardTieClient`;
 
 const plugins = [
-  builtins(),
   babel(),
   json(),
   nodeResolve({
+    browser: true,
+    preferBuiltins: false,
     mainFields: ['module', 'jsnext']
   }),
+  // nodeGlobals(),
+  // builtins(),
   commonjs({
     include: `node_modules/**`
   }),

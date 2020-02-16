@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="./../dist/umd/leopardTieClient.js"></script>
+
+    <script>
+      const teneoEngineUrl = 'https://teneo-demos-fusion.presales.artificial-solutions.com/leopard/';
+      const logResponse = response => {
+        console.log(response);
+        return response;
+      };
+
+      leopardTieClient
+        .sendInput(teneoEngineUrl, null, { text: 'My name is Peter' })
+        .then(logResponse)
+        .then(({ sessionId }) => leopardTieClient.sendInput(teneoEngineUrl, sessionId, { text: 'What is my name?' }))
+        .then(logResponse)
+        .then(({ sessionId }) => leopardTieClient.close(teneoEngineUrl, sessionId))
+        .catch(err => console.error(err));
+    </script>
+  </head>
+  <body></body>
+</html>
