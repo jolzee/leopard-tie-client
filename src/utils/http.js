@@ -6,6 +6,11 @@ const generateHeaders = additionalHeaders => {
   });
 };
 
+const success = {
+  status: 1,
+  message: 'logout'
+};
+
 const errors = {
   timeout: {
     success: false,
@@ -32,8 +37,8 @@ export default {
         .withCredentials()
         .type('form')
         .timeout({
-          response: 7000, // Wait 7 seconds for the server to start sending,
-          deadline: 20000 // but allow 20 seconds for the request to finish.
+          response: 20000, // Wait 20 seconds for the server to start sending,
+          deadline: 30000 // but allow 30 seconds for the request to finish.
         })
         .set(generateHeaders(headers))
         .send(params)
@@ -44,13 +49,9 @@ export default {
               resolve(json);
               return;
             } else if (json === null) {
-              resolve({
-                status: 1,
-                message: 'logout'
-              });
+              resolve(success);
               return;
             } else {
-              console.log(`JSON is..`, json);
               let businessError = errors.business;
               businessError.message = json;
               reject(businessError);
@@ -60,8 +61,10 @@ export default {
           err => {
             if (err.timeout) {
               reject(errors.timeout);
+            } else if (url.includes('endsession') && err.message.includes('Access-Control-Allow-Origin')) {
+              // This happens on teneo.ai for endsession CORS requests.. Assume session was killed
+              resolve(success);
             } else {
-              console.log(err);
               let e = errors.business;
               e.message = err;
               reject(e);
