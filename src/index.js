@@ -5,7 +5,6 @@ import { isNode } from 'browser-or-node';
 
 const readClientOrigin = () => {
   if (typeof document === 'undefined' || !document.location) return;
-
   return document.location.origin;
 };
 
@@ -20,17 +19,17 @@ const getHeaders = (currentSessionId, inputData) => {
 };
 const getParameters = prune(['viewtype', 'userinput', 'text', 'clientOrigin', 'headers']);
 const formatEngineUrl = url => (url.endsWith('/') ? url : `${url}/`);
+const appendSessionId = (url, sessionId) => (sessionId ? `${url};jsessionid=${sessionId}` : url);
 
 const requestBody = body => {
   const clientOrigin = readClientOrigin();
   const jspViewNames = { viewtype: 'tieapi' };
   const parameters = clientOrigin ? Object.assign(jspViewNames, { clientOrigin }) : jspViewNames;
-
   return Object.assign(parameters, body);
 };
 
 function close(teneoEngineUrl, sessionId, cb) {
-  const endSessionUrl = `${formatEngineUrl(teneoEngineUrl)}endsession`;
+  const endSessionUrl = appendSessionId(`${formatEngineUrl(teneoEngineUrl)}endsession`, sessionId);
   const headers = sessionId && isNode ? { Cookie: `JSESSIONID=${sessionId}` } : {};
 
   return http
@@ -62,7 +61,7 @@ function sendInput(teneoEngineUrl, currentSessionId, inputData, cb) {
   const headers = getHeaders(currentSessionId, inputData);
   const parameters = getParameters(inputData);
   const body = requestBody(Object.assign({ userinput: inputData.text }, parameters));
-  const url = formatEngineUrl(teneoEngineUrl);
+  const url = appendSessionId(formatEngineUrl(teneoEngineUrl), currentSessionId);
   return http
     .post(url, body, headers)
     .then(response => cb(null, response))
