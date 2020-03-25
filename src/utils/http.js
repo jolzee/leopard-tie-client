@@ -1,9 +1,23 @@
 import superagent from 'superagent';
+import unescapeJs from 'unescape-js';
 
 const generateHeaders = additionalHeaders => {
   return Object.assign(additionalHeaders, {
     Accept: 'application/json'
   });
+};
+
+const cleanOutputParams = responseObj => {
+  for (let [key, value] of Object.entries(responseObj.output.parameters)) {
+    try {
+      let parsedJsonResult = JSON.parse(unescapeJs(value));
+      responseObj.output.parameters[key] = parsedJsonResult;
+    } catch (e) {
+      // leave the value alone
+      return true;
+    }
+  }
+  return responseObj;
 };
 
 const success = {
@@ -46,7 +60,7 @@ export default {
           res => {
             let json = res.body;
             if (json instanceof Object && 'status' in json) {
-              resolve(json);
+              resolve(cleanOutputParams(json));
               return;
             } else if (json === null) {
               resolve(success);

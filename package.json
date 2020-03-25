@@ -71,6 +71,7 @@
   },
   "dependencies": {
     "browser-or-node": "^1.2.1",
-    "superagent": "^5.2.1"
+    "superagent": "^5.2.1",
+    "unescape-js": "^1.1.4"
   }
 }

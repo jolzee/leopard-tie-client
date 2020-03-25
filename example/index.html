@@ -16,7 +16,13 @@
       leopardTieClient
         .sendInput(teneoEngineUrl, null, { text: 'My name is Peter' })
         .then(logResponse)
-        .then(({ sessionId }) => leopardTieClient.sendInput(teneoEngineUrl, sessionId, { text: 'What is my name?' }))
+        .then(response => {
+          let teneoResponse = leopardTieClient.wrap(response);
+          if (teneoResponse.hasParameter('extensions')) {
+            console.log(teneoResponse.getParameter('extensions'));
+          }
+          return leopardTieClient.sendInput(teneoEngineUrl, teneoResponse.getSessionId(), { text: 'What is my name?' });
+        })
         .then(logResponse)
         .then(({ sessionId }) => leopardTieClient.close(teneoEngineUrl, sessionId))
         .catch(err => console.error(err));

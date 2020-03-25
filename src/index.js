@@ -1,6 +1,6 @@
-import callbackOrPromise from './utils/callback-or-promise';
 import http from './utils/http';
 import prune from './utils/prune';
+import TeneoResponse from './utils/teneo-response';
 import { isNode } from 'browser-or-node';
 
 const readClientOrigin = () => {
@@ -28,14 +28,10 @@ const requestBody = body => {
   return Object.assign(parameters, body);
 };
 
-function close(teneoEngineUrl, sessionId, cb) {
+function close(teneoEngineUrl, sessionId) {
   const endSessionUrl = appendSessionId(`${formatEngineUrl(teneoEngineUrl)}endsession`, sessionId);
   const headers = sessionId && isNode ? { Cookie: `JSESSIONID=${sessionId}` } : {};
-
-  return http
-    .post(endSessionUrl, requestBody(), headers)
-    .then(response => cb(null, response.body))
-    .catch(error => cb(error));
+  return http.post(endSessionUrl, requestBody(), headers); // returns a promise
 }
 
 const verifyInputData = inputData => {
@@ -57,22 +53,24 @@ const verifyInputData = inputData => {
 
 function sendInput(teneoEngineUrl, currentSessionId, inputData, cb) {
   verifyInputData(inputData);
-
   const headers = getHeaders(currentSessionId, inputData);
   const parameters = getParameters(inputData);
   const body = requestBody(Object.assign({ userinput: inputData.text }, parameters));
   const url = appendSessionId(formatEngineUrl(teneoEngineUrl), currentSessionId);
-  return http
-    .post(url, body, headers)
-    .then(response => cb(null, response))
-    .catch(error => cb(error));
+  return http.post(url, body, headers); // returns a promise
+}
+
+function wrap(teneoResp) {
+  return new TeneoResponse(teneoResp);
 }
 
 export default {
-  close: callbackOrPromise(close),
-  sendInput: callbackOrPromise(sendInput),
+  wrap,
+  close,
+  sendInput,
   init: teneoEngineUrl => ({
-    close: callbackOrPromise(close.bind(null, teneoEngineUrl)),
-    sendInput: callbackOrPromise(sendInput.bind(null, teneoEngineUrl))
+    close: close.bind(null, teneoEngineUrl),
+    sendInput: sendInput.bind(null, teneoEngineUrl),
+    wrap
   })
 };
