@@ -1,6 +1,6 @@
 {
   "name": "leopard-tie-client",
-  "version": "2.0.3",
+  "version": "3.0.0",
   "description": "Extended TIE Client that accepts additional custom request headers",
   "main": "dist/cjs/index.js",
   "browser": "dist/umd/leopardTieClient.js",
