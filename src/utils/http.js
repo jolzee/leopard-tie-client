@@ -11,10 +11,16 @@ const cleanOutputParams = responseObj => {
   for (let [key, value] of Object.entries(responseObj.output.parameters)) {
     try {
       let parsedJsonResult = JSON.parse(unescapeJs(value));
-      responseObj.output.parameters[key] = parsedJsonResult;
+      responseObj.output.parameters[key.trim()] = parsedJsonResult;
     } catch (e) {
-      // leave the value alone
-      return true;
+      if (value && value.trim() !== '') {
+        responseObj.output.parameters[key.trim()] = unescapeJs(value.trim());
+      } else {
+        delete responseObj.output.parameters[key];
+      }
+    }
+    if (key !== key.trim() && key in responseObj.output.parameters) {
+      delete responseObj.output.parameters[key];
     }
   }
   return responseObj;
