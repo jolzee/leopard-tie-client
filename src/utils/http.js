@@ -1,5 +1,5 @@
 import superagent from 'superagent';
-import unescapeJs from 'unescape-js';
+// import unescapeJs from 'unescape-js';
 
 const generateHeaders = additionalHeaders => {
   return Object.assign(additionalHeaders, {
@@ -7,18 +7,46 @@ const generateHeaders = additionalHeaders => {
   });
 };
 
+const getCorrectType = val => {
+  val = val.trim().toLowerCase();
+  val = val === 'true' || (val === 'false' ? false : val); //
+  if (typeof val === 'boolean') {
+    return val;
+  }
+  if (/^\d+$/.test(val)) {
+    // is number
+    return parseInt(val, 16);
+  } else {
+    return val;
+  }
+};
+
+const isJSON = str => {
+  if (/^\s*$/.test(str)) return false;
+  str = str.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@');
+  str = str.replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']');
+  str = str.replace(/(?:^|:|,)(?:\s*\[)+/g, '');
+  return /^[\],:{}\s]*$/.test(str);
+};
+
 const cleanOutputParams = responseObj => {
   for (let [key, value] of Object.entries(responseObj.output.parameters)) {
-    try {
-      let parsedJsonResult = JSON.parse(unescapeJs(value));
-      responseObj.output.parameters[key.trim()] = parsedJsonResult;
-    } catch (e) {
+    if (isJSON(value)) {
+      try {
+        let parsedJsonResult = JSON.parse(value);
+        responseObj.output.parameters[key.trim()] = parsedJsonResult;
+      } catch (e) {
+        delete responseObj.output.parameters[key];
+      }
+    } else {
+      // not json - check for empty param and delete
       if (value && value.trim() !== '') {
-        responseObj.output.parameters[key.trim()] = unescapeJs(value.trim());
+        responseObj.output.parameters[key.trim()] = getCorrectType(value);
       } else {
         delete responseObj.output.parameters[key];
       }
     }
+
     if (key !== key.trim() && key in responseObj.output.parameters) {
       delete responseObj.output.parameters[key];
     }
