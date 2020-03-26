@@ -8,16 +8,16 @@ const generateHeaders = additionalHeaders => {
 };
 
 const getCorrectType = val => {
-  val = val.trim().toLowerCase();
-  val = val === 'true' || (val === 'false' ? false : val); //
-  if (typeof val === 'boolean') {
-    return val;
+  let temp = val.trim().toLowerCase();
+  temp = temp === 'true' || (temp === 'false' ? false : val.trim()); //
+  if (typeof temp === 'boolean') {
+    return temp;
   }
-  if (/^\d+$/.test(val)) {
+  if (/^\d+$/.test(temp)) {
     // is number
-    return parseInt(val, 16);
+    return parseInt(temp, 16);
   } else {
-    return val;
+    return temp;
   }
 };
 
