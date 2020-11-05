@@ -78,15 +78,15 @@ const errors = {
 };
 
 export default {
-  post: (url, params, headers = {}) => {
+  post: (url, params, headers = {}, timeoutSeconds) => {
     return new Promise((resolve, reject) => {
       superagent
         .post(url)
         .withCredentials()
         .type('form')
         .timeout({
-          response: 20000, // Wait 20 seconds for the server to start sending,
-          deadline: 30000 // but allow 30 seconds for the request to finish.
+          response: timeoutSeconds * 1000, // Wait timeoutSeconds seconds for the server to start sending,
+          deadline: timeoutSeconds * 1000 // but allow timeoutSeconds seconds for the request to finish.
         })
         .set(generateHeaders(headers))
         .send(params)

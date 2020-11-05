@@ -28,10 +28,10 @@ const requestBody = body => {
   return Object.assign(parameters, body);
 };
 
-function close(teneoEngineUrl, sessionId) {
+function close(teneoEngineUrl, sessionId, timeoutSeconds = 20) {
   const endSessionUrl = appendSessionId(`${formatEngineUrl(teneoEngineUrl)}endsession`, sessionId);
   const headers = sessionId && isNode ? { Cookie: `JSESSIONID=${sessionId}` } : {};
-  return http.post(endSessionUrl, requestBody(), headers); // returns a promise
+  return http.post(endSessionUrl, requestBody(), headers, timeoutSeconds); // returns a promise
 }
 
 const verifyInputData = inputData => {
@@ -51,13 +51,13 @@ const verifyInputData = inputData => {
   }
 };
 
-function sendInput(teneoEngineUrl, currentSessionId, inputData, cb) {
+function sendInput(teneoEngineUrl, currentSessionId, inputData, timeoutSeconds = 20) {
   verifyInputData(inputData);
   const headers = getHeaders(currentSessionId, inputData);
   const parameters = getParameters(inputData);
   const body = requestBody(Object.assign({ userinput: inputData.text }, parameters));
   const url = appendSessionId(formatEngineUrl(teneoEngineUrl), currentSessionId);
-  return http.post(url, body, headers); // returns a promise
+  return http.post(url, body, headers, timeoutSeconds); // returns a promise
 }
 
 function wrap(teneoResp) {
