@@ -108,7 +108,9 @@ export default {
           },
           err => {
             if (err.timeout) {
-              reject(errors.timeout + timeoutSeconds + ' seconds');
+              let timeout = Object.assign({}, errors.timeout);
+              timeout.message = timeout.message + timeoutSeconds + ' seconds';
+              reject(timeout);
             } else if (url.includes('endsession') && err.message.includes('Access-Control-Allow-Origin')) {
               // This happens on teneo.ai for endsession CORS requests.. Assume session was killed
               resolve(success);
