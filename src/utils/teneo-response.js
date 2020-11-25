@@ -45,6 +45,10 @@ export default class TeneoResponse {
     return this.json.output.link || false;
   }
 
+  addParameter(name, value) {
+    this.json.output.parameters[name] = value;
+  }
+
   hasParameter(name) {
     return name in this.json.output.parameters;
   }
