@@ -53,6 +53,13 @@ export default class TeneoResponse {
     return this.json.output.parameters[name];
   }
 
+  getParameterNames() {
+    let paramNames = [];
+    for (let [key] of Object.entries(this.json.output.parameters)) {
+      paramNames.push(key);
+    }
+  }
+
   hasParametersStartingWith(prefix) {
     let result = false;
     for (let [key, value] of Object.entries(this.json.output.parameters)) {
