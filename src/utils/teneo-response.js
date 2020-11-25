@@ -58,6 +58,7 @@ export default class TeneoResponse {
     for (let [key] of Object.entries(this.json.output.parameters)) {
       paramNames.push(key);
     }
+    return paramNames;
   }
 
   hasParametersStartingWith(prefix) {
